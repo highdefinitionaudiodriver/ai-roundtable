@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#087f8c" />
+    <meta name="description" content="Send an AI answer to other AIs for review, debate, and synthesis." />
+    <title>AI Roundtable</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow">AI回答を、他のAIの検討会へ</p>
+          <h1>AI Roundtable</h1>
+        </div>
+        <div class="language">
+          <label for="language" data-i18n="language">表示言語</label>
+          <select id="language">
+            <option value="auto">Auto</option>
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+            <option value="ko">한국어</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+        </div>
+      </section>
+      <section class="notice model-notice">
+        <strong data-i18n="modelNoticeTitle">透明性メモ</strong>
+        <span data-i18n="modelNoticeBody">アプリ内実行では、選択した同一AIが複数の視点を演じます。別社AIによる独立検証ではありません。</span>
+      </section>
+      <section class="notice import-notice" id="import-notice" hidden>
+        <strong data-i18n="importNoticeTitle">外部取り込み</strong>
+        <span data-i18n="importNoticeBody">この内容はURLまたは共有メニューから取り込まれました。実行前に本文と送信先を確認してください。</span>
+      </section>
+
+      <section class="workspace">
+        <form class="panel input-panel" id="roundtable-form">
+          <div class="panel-title">
+            <h2 data-i18n="sourceTitle">元のAI回答</h2>
+            <button type="button" class="icon-button" id="paste-button" title="Paste from clipboard" aria-label="Paste from clipboard">⌘V</button>
+          </div>
+          <label for="question" data-i18n="questionLabel">元の質問・相談</label>
+          <textarea id="question" rows="4" data-i18n-placeholder="questionPlaceholder" placeholder="例: この契約書のリスクを教えて"></textarea>
+
+          <label for="source-answer" data-i18n="answerLabel">このAIに言われた内容</label>
+          <textarea id="source-answer" rows="11" required data-i18n-placeholder="answerPlaceholder" placeholder="別のAIからの回答をここに貼り付け"></textarea>
+
+          <div class="controls">
+            <label>
+              <span data-i18n="mode">議論モード</span>
+              <select id="mode">
+                <option value="balanced" data-i18n="balanced">バランス</option>
+                <option value="strict" data-i18n="strict">厳しめレビュー</option>
+                <option value="creative" data-i18n="creative">別視点多め</option>
+                <option value="expert" data-i18n="expert">専門家風</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="provider">実行AI</span>
+              <select id="provider">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Claude API</option>
+                <option value="gemini">Gemini API</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="primary" data-i18n="runRoundtable">検討会を実行</button>
+            <button type="button" class="auto-button" id="auto-button" data-i18n="startAuto">自動議論を開始</button>
+            <button type="button" class="danger" id="stop-button" data-i18n="stopAuto" disabled>停止</button>
+            <button type="button" id="copy-master" data-i18n="copyPrompt">共有プロンプトをコピー</button>
+          </div>
+          <p class="cost-note" data-i18n="autoCostNote">自動議論は停止するまでAPIを呼び続けます。費用や利用上限に注意してください。</p>
+          <p class="status" id="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="panel quick-panel">
+          <h2 data-i18n="quickTitle">ワンクリック共有</h2>
+          <div class="quick-grid" id="ai-links"></div>
+
+          <div class="install-box">
+            <h3 data-i18n="installTitle">スマホアプリ化</h3>
+            <p data-i18n="installBody">ホーム画面に追加すると、アプリのようにすぐ起動できます。</p>
+            <button type="button" id="install-button" data-i18n="installButton" hidden>ホーム画面に追加</button>
+            <p class="mini" data-i18n="installHint">iPhoneは共有ボタンから「ホーム画面に追加」を選んでください。</p>
+          </div>
+
+          <div class="bookmarklet">
+            <h3 data-i18n="bookmarkletTitle">選択テキスト取り込み</h3>
+            <p data-i18n="bookmarkletBody">他のAI画面で回答文を選択して、このブックマークレットを押すと取り込めます。</p>
+            <a id="bookmarklet-link" href="#">AI Roundtable</a>
+            <button type="button" id="copy-bookmarklet" data-i18n="copyBookmarklet">ブックマークレットをコピー</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel result-panel">
+        <div class="panel-title">
+          <h2 data-i18n="discussion">AI同士の意見交換</h2>
+          <button type="button" id="copy-summary" data-i18n="copyDiscussion">議論をコピー</button>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+    </main>
+    <dialog class="risk-dialog" id="risk-dialog">
+      <form method="dialog" class="risk-card">
+        <h2 id="risk-title" data-i18n="riskTitle">高リスク領域の可能性があります</h2>
+        <p id="risk-message"></p>
+        <ul id="risk-list"></ul>
+        <label class="confirm-row">
+          <input type="checkbox" id="risk-confirm" />
+          <span data-i18n="riskConfirm">AIの出力を最終判断に使わず、必要に応じて有資格者・責任ある人間に確認します。</span>
+        </label>
+        <div class="dialog-actions">
+          <button type="button" id="risk-cancel" data-i18n="cancel">キャンセル</button>
+          <button type="button" class="primary" id="risk-continue" data-i18n="continueAnyway" disabled>理解して続行</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="./app.js?v=9"></script>
+  </body>
+</html>

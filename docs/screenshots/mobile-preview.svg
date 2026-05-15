@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" role="img" aria-label="AI Roundtable mobile preview">
+  <rect width="390" height="844" fill="#f6f3ef"/>
+  <text x="20" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#1e2327">AI Roundtable</text>
+  <text x="20" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#087f8c">AI answers, reviewed by other AIs</text>
+  <rect x="20" y="110" width="350" height="474" rx="8" fill="#fffdfa" stroke="#d9d3ca"/>
+  <text x="42" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#1e2327">Original AI Answer</text>
+  <rect x="42" y="178" width="306" height="80" rx="7" fill="#ffffff" stroke="#d9d3ca"/>
+  <text x="60" y="223" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#66707a">Question or source URL</text>
+  <rect x="42" y="288" width="306" height="170" rx="7" fill="#ffffff" stroke="#d9d3ca"/>
+  <text x="60" y="334" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#66707a">Paste another AI's answer</text>
+  <rect x="42" y="486" width="120" height="44" rx="7" fill="#087f8c"/>
+  <text x="70" y="514" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#ffffff">Run</text>
+  <rect x="174" y="486" width="142" height="44" rx="7" fill="#e8f4f3" stroke="#087f8c"/>
+  <text x="198" y="514" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#05626c">Auto debate</text>
+  <text x="42" y="558" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#66707a">Auto debate keeps calling APIs until stopped.</text>
+  <rect x="20" y="608" width="350" height="172" rx="8" fill="#fffdfa" stroke="#d9d3ca"/>
+  <text x="42" y="650" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#1e2327">One-click sharing</text>
+  <rect x="42" y="676" width="134" height="42" rx="7" fill="#ffffff" stroke="#d9d3ca"/>
+  <text x="75" y="703" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#1e2327">ChatGPT</text>
+  <rect x="192" y="676" width="134" height="42" rx="7" fill="#ffffff" stroke="#d9d3ca"/>
+  <text x="238" y="703" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#1e2327">Claude</text>
+  <rect x="42" y="732" width="284" height="30" rx="7" fill="#e8f4f3"/>
+  <text x="62" y="752" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#05626c">PWA install and share target</text>
+</svg>
+
