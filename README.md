@@ -9,6 +9,27 @@ It is designed for moments like:
 
 > This AI told me something. Can other AIs discuss whether it is actually reasonable?
 
+---
+
+## 🎯 これは何？（30秒で）
+
+- **誰のため**：AI の回答を複数視点で検証したい個人ユーザー／生成 AI のロールプレイ評価に関心がある開発者
+- **何が解決される**：「AI が言ったことは本当に妥当か？」を、**同じ AI モデルに複数の役割を演じさせて疑似ディベート**させ、自己整合性チェックの素材を作る。簡易なセーフティゲートと CSRF / Same-Origin 制限あり
+- **なぜ既存ツールではダメか**：ChatGPT / Claude 単体ではセルフレビューになりがち。本ツールは **コピペ用プロンプト＋ローカル自動ループ** を提供
+- **使う条件**：ブラウザ（PWA 対応）／オプションで Claude/OpenAI API キー
+
+> ⚠️ **本ツールは独立した複数の AI 企業による検証ではありません**。医療・法律・金融・自傷など人生に関わる判断には**絶対に使用しないでください**。
+
+## 💰 想定ユースケース・価格帯
+
+| 用途 | 形態 |
+|---|---|
+| 個人利用（AI 回答の妥当性チェック） | 無料（MIT） |
+| 教育・研究目的の利用 | 無料（MIT） |
+| 直接の商用課金は想定しない（社会的責任の観点から） | — |
+
+---
+
 ## Features
 
 - Paste or import an AI answer in any language.
@@ -135,3 +156,11 @@ Before posting publicly, review:
 ## License
 
 MIT
+
+---
+
+## 🤝 商用利用・カスタマイズ依頼
+
+- 個人・社内利用は無料（MIT ライセンス）
+- 法人・自治体・SI 向け導入支援、カスタマイズ、診断レポート受託は応相談
+- 連絡先：highdefinitionaudiodriver@gmail.com
