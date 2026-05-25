@@ -164,3 +164,15 @@ MIT
 - 個人・社内利用は無料（MIT ライセンス）
 - 法人・自治体・SI 向け導入支援、カスタマイズ、診断レポート受託は応相談
 - 連絡先：highdefinitionaudiodriver@gmail.com
+
+<!-- CODEX-CURRENT-STATUS:START -->
+## 現状サマリ (2026-05-25)
+
+- 対象: AI Roundtable
+- 作業ブランチ: main
+- README更新時点の参照コミット: a08e16d docs: 売れるための README 改善 (C1/C3/C5)
+- docs ディレクトリ配下に設計・運用・補足資料を配置。
+- 主要な確認コマンド: README 記載のセットアップ・検証コマンド
+- 次に進めるなら、README 内の利用手順と既存 docs / tests を起点に、未整備の検証手順・引き継ぎメモ・CI 化を補強する。
+<!-- CODEX-CURRENT-STATUS:END -->
+
