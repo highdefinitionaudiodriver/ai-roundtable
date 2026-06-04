@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README に「これは何？（30秒で）」「想定ユースケース・価格帯」セクションを追加
 - SECURITY.md を追加（脆弱性報告フロー）
 - 商用利用・カスタマイズ依頼の連絡先を README 末尾に明記
+- サーバ側純粋ロジック（セーフティ判定・transcript整形・プロンプト生成・入力検証）の単体テストを `tests/test_server_logic.py` に追加（ネットワーク不要、13ケース）
 
 ## [0.1.0]
 

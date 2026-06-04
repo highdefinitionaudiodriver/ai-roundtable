@@ -115,6 +115,14 @@ Open the app and use the bookmarklet shown in the side panel. Add it to your boo
 
 Note: the current bookmarklet sends selected text through the URL query string, so sensitive text may remain in browser history or logs. Do not use it for confidential content.
 
+## Tests
+
+Server-side pure logic (safety gating, transcript handling, prompt building, input validation) is covered by unit tests that require no network access:
+
+```powershell
+python -m unittest discover -s tests
+```
+
 ## Design Document
 
 The Excel design document is included:
