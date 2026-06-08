@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- アプリ内実行のプロバイダを 3 → **8 社**に拡張：OpenAI / Anthropic / Gemini に加え、**xAI Grok / Groq / Mistral / DeepSeek / Perplexity**（OpenAI Chat Completions 互換）。サーバ側はレジストリ＋汎用呼び出し `call_openai_compatible` で実装。各プロバイダの API キー・モデル・トークン上限は環境変数で個別設定可能（`.env.example` 参照）
+- 初見でも API キーの要否が分かる UI を追加：プロバイダ選択肢に「（キー設定済み）／（キー未設定）」を表示、選択中プロバイダの状態メッセージ、設定方法の案内ブロック（環境変数の例）を画面に常設
+- マルチプロバイダ対応の単体テスト（プロバイダ一覧、キー未設定時の明確なエラー、未知プロバイダの OpenAI フォールバック等、6ケース追加 → 計19）
+
 ## [0.2.0] - 2026-06-04
 
 ### Added

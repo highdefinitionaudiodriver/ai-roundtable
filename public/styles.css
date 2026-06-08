@@ -385,3 +385,35 @@ select:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+/* -------- API キー案内ブロック -------- */
+.api-help {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #d7e0ee;
+  border-radius: 10px;
+  background: #f3f7ff;
+  font-size: 0.9rem;
+}
+.api-help__lead { margin: 0 0 4px; font-weight: 600; }
+.api-help__sub { margin: 4px 0; color: #475569; font-size: 0.85rem; }
+.api-help__details { margin-top: 8px; }
+.api-help__details summary { cursor: pointer; color: #2563eb; font-size: 0.85rem; }
+.api-help__code {
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+.api-help__status {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #047857;
+}
+.api-help__status--warn { color: #b45309; }

@@ -73,16 +73,38 @@ run.bat
 
 ## Optional API Keys
 
-The app works without API keys as a one-click prompt router. To run AI responses inside the app, set one or more provider keys:
+> 💡 **アプリ内で AI を実行するには、その提供元の API キーが必要です。** キーが無くても、
+> 「ワンクリック共有」で各 AI を開いたり、プロンプトをコピーして使う分には**無料**です。
+> 画面上では、各プロバイダに「（キー設定済み）／（キー未設定）」が表示され、初見でも要否が分かります。
+
+The app works without API keys as a one-click prompt router. To run AI responses inside the app, set one or more provider keys. Supported providers (in-app execution):
+
+| Provider | Env var | Notes |
+|---|---|---|
+| OpenAI (ChatGPT) | `OPENAI_API_KEY` | OpenAI Chat Completions |
+| Anthropic (Claude) | `ANTHROPIC_API_KEY` | Messages API |
+| Google Gemini | `GEMINI_API_KEY` | generateContent |
+| xAI Grok | `XAI_API_KEY` | OpenAI-compatible |
+| Groq | `GROQ_API_KEY` | OpenAI-compatible |
+| Mistral | `MISTRAL_API_KEY` | OpenAI-compatible |
+| DeepSeek | `DEEPSEEK_API_KEY` | OpenAI-compatible |
+| Perplexity | `PERPLEXITY_API_KEY` | OpenAI-compatible |
+
+Set one or more before starting the server (you only need the providers you want to use):
 
 ```powershell
 $env:OPENAI_API_KEY="..."
 $env:ANTHROPIC_API_KEY="..."
 $env:GEMINI_API_KEY="..."
+$env:XAI_API_KEY="..."        # Grok
+$env:GROQ_API_KEY="..."       # Groq
+$env:MISTRAL_API_KEY="..."    # Mistral
+$env:DEEPSEEK_API_KEY="..."   # DeepSeek
+$env:PERPLEXITY_API_KEY="..." # Perplexity
 python server.py
 ```
 
-See `.env.example` for optional model and port settings.
+See `.env.example` for per-provider model overrides, output-token limits, and port settings.
 
 ## Auto Debate
 

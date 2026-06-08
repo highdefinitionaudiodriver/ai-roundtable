@@ -74,15 +74,7 @@ class AppHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path == "/api/providers":
-            self.write_json(
-                {
-                    "providers": {
-                        "openai": bool(os.environ.get("OPENAI_API_KEY")),
-                        "anthropic": bool(os.environ.get("ANTHROPIC_API_KEY")),
-                        "gemini": bool(os.environ.get("GEMINI_API_KEY")),
-                    }
-                }
-            )
+            self.write_json({"providers": provider_key_status()})
             return
         if self.path == "/api/csrf":
             self.write_json({"csrfToken": CSRF_TOKEN})
@@ -215,12 +207,80 @@ Roundtable so far:
 Your response:{footer}"""
 
 
+# OpenAI Chat Completions 互換のプロバイダ群。
+# いずれも同じリクエスト/レスポンス形式なので汎用呼び出しで処理する。
+# 個別実装が必要な anthropic / gemini はこの辞書には含めない。
+OPENAI_COMPATIBLE = {
+    "openai": {
+        "label": "OpenAI (ChatGPT)",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "key_env": "OPENAI_API_KEY",
+        "model_env": "OPENAI_MODEL",
+        "default_model": "gpt-4o-mini",
+    },
+    "grok": {
+        "label": "xAI Grok",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "key_env": "XAI_API_KEY",
+        "model_env": "XAI_MODEL",
+        "default_model": "grok-2-latest",
+    },
+    "groq": {
+        "label": "Groq",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "key_env": "GROQ_API_KEY",
+        "model_env": "GROQ_MODEL",
+        "default_model": "llama-3.3-70b-versatile",
+    },
+    "mistral": {
+        "label": "Mistral",
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "key_env": "MISTRAL_API_KEY",
+        "model_env": "MISTRAL_MODEL",
+        "default_model": "mistral-large-latest",
+    },
+    "deepseek": {
+        "label": "DeepSeek",
+        "url": "https://api.deepseek.com/chat/completions",
+        "key_env": "DEEPSEEK_API_KEY",
+        "model_env": "DEEPSEEK_MODEL",
+        "default_model": "deepseek-chat",
+    },
+    "perplexity": {
+        "label": "Perplexity",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "key_env": "PERPLEXITY_API_KEY",
+        "model_env": "PERPLEXITY_MODEL",
+        "default_model": "sonar",
+    },
+}
+
+# 個別実装プロバイダのキー環境変数（/api/providers の可用性表示に使用）
+SPECIAL_PROVIDERS = {
+    "anthropic": {"label": "Anthropic (Claude)", "key_env": "ANTHROPIC_API_KEY"},
+    "gemini": {"label": "Google Gemini", "key_env": "GEMINI_API_KEY"},
+}
+
+
+def provider_key_status() -> dict[str, bool]:
+    """各プロバイダについて、対応する API キーが設定済みかを返す。"""
+    status: dict[str, bool] = {}
+    for name, cfg in OPENAI_COMPATIBLE.items():
+        status[name] = bool(os.environ.get(cfg["key_env"]))
+    for name, cfg in SPECIAL_PROVIDERS.items():
+        status[name] = bool(os.environ.get(cfg["key_env"]))
+    return status
+
+
 def call_provider(provider: str, prompt: str) -> str:
     if provider == "anthropic":
         return call_anthropic(prompt)
     if provider == "gemini":
         return call_gemini(prompt)
-    return call_openai(prompt)
+    if provider in OPENAI_COMPATIBLE:
+        return call_openai_compatible(provider, prompt)
+    # 未知のプロバイダは OpenAI にフォールバック
+    return call_openai_compatible("openai", prompt)
 
 
 def post_json(url: str, headers: dict, body: dict) -> dict:
@@ -234,24 +294,34 @@ def post_json(url: str, headers: dict, body: dict) -> dict:
         raise RuntimeError(f"Provider request failed: {exc.code} {detail}") from exc
 
 
-def call_openai(prompt: str) -> str:
-    key = os.environ.get("OPENAI_API_KEY")
+def call_openai_compatible(provider: str, prompt: str) -> str:
+    """OpenAI Chat Completions 互換 API を呼び出す汎用関数。"""
+    cfg = OPENAI_COMPATIBLE[provider]
+    key = os.environ.get(cfg["key_env"])
     if not key:
-        raise RuntimeError("OPENAI_API_KEY is not set. Use copy/open buttons instead, or set an API key.")
+        raise RuntimeError(
+            f"{cfg['key_env']} is not set. Use copy/open buttons instead, or set an API key."
+        )
+    max_tokens_env = cfg["key_env"].replace("_API_KEY", "_MAX_TOKENS")
     data = post_json(
-        "https://api.openai.com/v1/chat/completions",
+        cfg["url"],
         {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         {
-            "model": os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
+            "model": os.environ.get(cfg["model_env"], cfg["default_model"]),
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt},
             ],
             "temperature": 0.4,
-            "max_tokens": int(os.environ.get("OPENAI_MAX_TOKENS", "1000")),
+            "max_tokens": int(os.environ.get(max_tokens_env, "1000")),
         },
     )
     return data["choices"][0]["message"]["content"].strip()
+
+
+def call_openai(prompt: str) -> str:
+    """後方互換用エイリアス（旧名）。"""
+    return call_openai_compatible("openai", prompt)
 
 
 def call_anthropic(prompt: str) -> str:

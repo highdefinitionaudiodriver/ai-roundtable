@@ -11,6 +11,7 @@ or:
 """
 from __future__ import annotations
 
+import os
 import pathlib
 import sys
 import unittest
@@ -119,6 +120,74 @@ class RoundtableStepValidationTests(unittest.TestCase):
             server.run_roundtable_step(
                 {"sourceAnswer": "answer", "role": "does-not-exist"}
             )
+
+
+class ProviderRegistryTests(unittest.TestCase):
+    """マルチプロバイダ対応（OpenAI 互換 + 個別実装）の検証。
+
+    いずれも API キー未設定なら、ネットワークアクセスの前に
+    「<KEY> is not set」で失敗するため、ネット無しでテストできる。
+    """
+
+    EXPECTED = {
+        "openai", "grok", "groq", "mistral", "deepseek", "perplexity",
+        "anthropic", "gemini",
+    }
+
+    def setUp(self) -> None:
+        # 全プロバイダのキーを退避して未設定状態にする
+        self._saved = {}
+        for cfg in list(server.OPENAI_COMPATIBLE.values()) + list(server.SPECIAL_PROVIDERS.values()):
+            k = cfg["key_env"]
+            self._saved[k] = os.environ.pop(k, None)
+
+    def tearDown(self) -> None:
+        for k, v in self._saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+
+    def test_provider_key_status_lists_all_providers(self):
+        status = server.provider_key_status()
+        self.assertEqual(set(status.keys()), self.EXPECTED)
+        # キー未設定なので全て False
+        self.assertTrue(all(v is False for v in status.values()))
+
+    def test_openai_compatible_registry_has_expected_providers(self):
+        self.assertEqual(
+            set(server.OPENAI_COMPATIBLE.keys()),
+            {"openai", "grok", "groq", "mistral", "deepseek", "perplexity"},
+        )
+        for cfg in server.OPENAI_COMPATIBLE.values():
+            self.assertTrue(cfg["url"].startswith("https://"))
+            self.assertTrue(cfg["key_env"].endswith("_API_KEY"))
+            self.assertTrue(cfg["default_model"])
+
+    def test_each_openai_compatible_provider_errors_without_key(self):
+        for name, cfg in server.OPENAI_COMPATIBLE.items():
+            with self.assertRaises(RuntimeError) as ctx:
+                server.call_provider(name, "prompt")
+            self.assertIn(cfg["key_env"], str(ctx.exception))
+
+    def test_anthropic_and_gemini_error_without_key(self):
+        with self.assertRaises(RuntimeError) as a:
+            server.call_provider("anthropic", "p")
+        self.assertIn("ANTHROPIC_API_KEY", str(a.exception))
+        with self.assertRaises(RuntimeError) as g:
+            server.call_provider("gemini", "p")
+        self.assertIn("GEMINI_API_KEY", str(g.exception))
+
+    def test_unknown_provider_falls_back_to_openai(self):
+        # 未知プロバイダは OpenAI 互換にフォールバック → OPENAI_API_KEY 未設定で失敗
+        with self.assertRaises(RuntimeError) as ctx:
+            server.call_provider("does-not-exist", "p")
+        self.assertIn("OPENAI_API_KEY", str(ctx.exception))
+
+    def test_legacy_call_openai_alias(self):
+        with self.assertRaises(RuntimeError) as ctx:
+            server.call_openai("p")
+        self.assertIn("OPENAI_API_KEY", str(ctx.exception))
 
 
 if __name__ == "__main__":

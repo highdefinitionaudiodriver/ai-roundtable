@@ -65,11 +65,44 @@
             <label>
               <span data-i18n="provider">実行AI</span>
               <select id="provider">
-                <option value="openai">OpenAI</option>
-                <option value="anthropic">Claude API</option>
-                <option value="gemini">Gemini API</option>
+                <option value="openai" data-label="OpenAI (ChatGPT)">OpenAI (ChatGPT)</option>
+                <option value="anthropic" data-label="Anthropic (Claude)">Anthropic (Claude)</option>
+                <option value="gemini" data-label="Google Gemini">Google Gemini</option>
+                <option value="grok" data-label="xAI Grok">xAI Grok</option>
+                <option value="groq" data-label="Groq">Groq</option>
+                <option value="mistral" data-label="Mistral">Mistral</option>
+                <option value="deepseek" data-label="DeepSeek">DeepSeek</option>
+                <option value="perplexity" data-label="Perplexity">Perplexity</option>
               </select>
             </label>
+          </div>
+
+          <div class="api-help" id="api-help">
+            <p class="api-help__lead" data-i18n="apiHelpLead">
+              💡 アプリ内で AI を実行するには、その提供元の API キーが必要です。
+            </p>
+            <p class="api-help__sub" data-i18n="apiHelpSub">
+              API キーが無くても、右の「ワンクリック共有」で各 AI を開いたり、プロンプトをコピーして使えます（無料）。
+            </p>
+            <details class="api-help__details">
+              <summary data-i18n="apiHelpHow">API キーの設定方法</summary>
+              <p data-i18n="apiHelpHowBody">
+                サーバ起動前に環境変数でキーを設定してください（例）:
+              </p>
+              <pre class="api-help__code">$env:OPENAI_API_KEY="..."      # ChatGPT
+$env:ANTHROPIC_API_KEY="..."   # Claude
+$env:GEMINI_API_KEY="..."      # Gemini
+$env:XAI_API_KEY="..."         # Grok
+$env:GROQ_API_KEY="..."        # Groq
+$env:MISTRAL_API_KEY="..."     # Mistral
+$env:DEEPSEEK_API_KEY="..."    # DeepSeek
+$env:PERPLEXITY_API_KEY="..."  # Perplexity
+python server.py</pre>
+              <p class="api-help__sub" data-i18n="apiHelpEnv">
+                詳細は同梱の <code>.env.example</code> を参照してください。
+              </p>
+            </details>
+            <p class="api-help__status" id="provider-availability" aria-live="polite"></p>
           </div>
 
           <div class="actions">

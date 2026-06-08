@@ -51,6 +51,15 @@ const translations = {
     missing: "元のAI回答を入力してください。",
     pasteFail: "クリップボードを読めませんでした。手動で貼り付けてください。",
     noApi: "APIキーが未設定の場合は、右側の共有ボタンかプロンプトコピーを使えます。",
+    apiHelpLead: "💡 アプリ内で AI を実行するには、その提供元の API キーが必要です。",
+    apiHelpSub: "API キーが無くても、右の「ワンクリック共有」で各 AI を開いたり、プロンプトをコピーして使えます（無料）。",
+    apiHelpHow: "API キーの設定方法",
+    apiHelpHowBody: "サーバ起動前に環境変数でキーを設定してください（例）:",
+    apiHelpEnv: "詳細は同梱の .env.example を参照してください。",
+    providerReady: "✓ {name} の API キーは設定済みです。すぐ実行できます。",
+    providerMissing: "⚠ {name} の API キーが未設定です。このまま実行するとエラーになります。共有/コピーをご利用ください。",
+    optionKeySet: "（キー設定済み）",
+    optionKeyMissing: "（キー未設定）",
     appReady: "スマホにインストールできる状態です。",
     appInstalled: "ホーム画面に追加しました。",
     reviewer: "レビュアー",
@@ -111,6 +120,15 @@ const translations = {
     missing: "Please enter the original AI answer.",
     pasteFail: "Could not read the clipboard. Please paste manually.",
     noApi: "If API keys are not configured, use the share buttons or copy prompt.",
+    apiHelpLead: "💡 Running an AI inside this app requires that provider's API key.",
+    apiHelpSub: "No API key? You can still open each AI or copy the prompt from \"One-click share\" on the right (free).",
+    apiHelpHow: "How to set an API key",
+    apiHelpHowBody: "Set the key as an environment variable before starting the server (example):",
+    apiHelpEnv: "See the bundled .env.example for details.",
+    providerReady: "✓ {name} API key is configured. Ready to run.",
+    providerMissing: "⚠ {name} API key is not set. Running now will error — use share/copy instead.",
+    optionKeySet: "(key set)",
+    optionKeyMissing: "(no key)",
     appReady: "Ready to install on your phone.",
     appInstalled: "Added to your home screen.",
     reviewer: "Reviewer",
@@ -538,15 +556,49 @@ async function installApp() {
   $("install-button").hidden = true;
 }
 
+function providerLabel(option) {
+  return option ? (option.getAttribute("data-label") || option.value) : "";
+}
+
+function updateProviderAvailability() {
+  const sel = $("provider");
+  const el = $("provider-availability");
+  if (!sel || !el) return;
+  const status = state.providerStatus || {};
+  const name = providerLabel(sel.selectedOptions[0]);
+  if (status[sel.value]) {
+    el.textContent = t("providerReady").replace("{name}", name);
+    el.classList.remove("api-help__status--warn");
+  } else {
+    el.textContent = t("providerMissing").replace("{name}", name);
+    el.classList.add("api-help__status--warn");
+  }
+}
+
 async function loadProviderStatus() {
   try {
     const response = await fetch("/api/providers");
     const data = await response.json();
-    const hasAny = Object.values(data.providers || {}).some(Boolean);
-    if (!hasAny) setStatus(t("noApi"));
+    state.providerStatus = data.providers || {};
   } catch {
-    setStatus(t("noApi"));
+    state.providerStatus = {};
   }
+  // 各選択肢に「キー設定済み / 未設定」を付記して、初見でも要否が分かるようにする
+  const sel = $("provider");
+  if (sel) {
+    Array.from(sel.options).forEach((opt) => {
+      const base = opt.getAttribute("data-label") || opt.textContent.trim();
+      const suffix = state.providerStatus[opt.value] ? t("optionKeySet") : t("optionKeyMissing");
+      opt.textContent = `${base} ${suffix}`;
+    });
+    if (!sel.dataset.availabilityWired) {
+      sel.addEventListener("change", updateProviderAvailability);
+      sel.dataset.availabilityWired = "1";
+    }
+  }
+  const hasAny = Object.values(state.providerStatus).some(Boolean);
+  if (!hasAny) setStatus(t("noApi"));
+  updateProviderAvailability();
 }
 
 async function loadCsrfToken() {
