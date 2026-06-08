@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+PackageIdentifier: highdefinitionaudiodriver.ai-roundtable
+PackageVersion: 0.2.0
+PackageLocale: ja-JP
+Publisher: highdefinitionaudiodriver
+PublisherUrl: https://github.com/highdefinitionaudiodriver
+PackageName: AI Roundtable - AI 円卓会議
+PackageUrl: https://github.com/highdefinitionaudiodriver/ai-roundtable
+License: MIT
+ShortDescription: AI Roundtable is a local web app for taking an answer from one AI and asking other AI roles to review, challenge, expand
+Moniker: ai-roundtable
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0
