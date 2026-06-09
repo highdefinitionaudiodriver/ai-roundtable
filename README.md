@@ -32,8 +32,10 @@ It is designed for moments like:
 
 ## Features
 
+- **One-click「サンプルで試す」**: 質問＋回答を即充填し、実行/共有コピーですぐ結果を体験。空フォームの初見ハードルを解消。
 - Paste or import an AI answer in any language.
 - Copy ready-made prompts for ChatGPT, Claude, Gemini, Perplexity, Grok, or Copilot.
+- **In-app execution across 8 providers**: OpenAI / Anthropic / Gemini / xAI Grok / Groq / Mistral / DeepSeek / Perplexity. 各プロバイダに「キー設定済み/未設定」を表示し、初見でも API キーの要否が一目で分かる。
 - Run a four-role roundtable locally when API keys are configured.
 - Start an auto debate that continues until the user presses Stop.
 - Apply simple safety gating for blocked and high-risk topics.
