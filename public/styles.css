@@ -220,6 +220,34 @@ select:disabled {
   font-weight: 800;
 }
 
+.panel-title__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 「サンプルで試す」: 目立ちすぎない誘導ボタン */
+.ghost-button {
+  border: 1px solid var(--accent);
+  color: var(--accent-dark);
+  background: var(--soft);
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ghost-button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* 主要アクション(実行)をひと目で分かるように少し強調 */
+.primary {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

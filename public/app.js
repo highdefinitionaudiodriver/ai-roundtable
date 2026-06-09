@@ -60,6 +60,11 @@ const translations = {
     providerMissing: "⚠ {name} の API キーが未設定です。このまま実行するとエラーになります。共有/コピーをご利用ください。",
     optionKeySet: "（キー設定済み）",
     optionKeyMissing: "（キー未設定）",
+    trySample: "サンプルで試す",
+    sampleHint: "サンプルを入れました。「検討会を実行」かAPIキー未設定なら「共有プロンプトをコピー」で試せます。",
+    sampleQuestion: "新しい習慣を無理なく続けるコツを教えて",
+    sampleAnswer:
+      "習慣化のコツは、①ハードルを極端に下げる（例:「腕立て1回」から始める）②既存の習慣の直後に紐づける（歯磨きの後にスクワット等）③できた日をカレンダーに記録して可視化する、の3つです。完璧を目指さず、できなかった日も気にせず翌日また始めることが、長続きの最大の秘訣です。",
     appReady: "スマホにインストールできる状態です。",
     appInstalled: "ホーム画面に追加しました。",
     reviewer: "レビュアー",
@@ -129,6 +134,11 @@ const translations = {
     providerMissing: "⚠ {name} API key is not set. Running now will error — use share/copy instead.",
     optionKeySet: "(key set)",
     optionKeyMissing: "(no key)",
+    trySample: "Try a sample",
+    sampleHint: "Sample filled in. Press \"Run the roundtable\", or \"Copy share prompt\" if you have no API key.",
+    sampleQuestion: "How can I stick to a new habit without burning out?",
+    sampleAnswer:
+      "Three keys to building a habit: (1) lower the bar drastically (start with a single push-up), (2) anchor it right after an existing habit (squats after brushing your teeth), and (3) record each success on a calendar to make progress visible. Don't aim for perfection — the real secret is to simply start again the next day, even after a miss.",
     appReady: "Ready to install on your phone.",
     appInstalled: "Added to your home screen.",
     reviewer: "Reviewer",
@@ -235,6 +245,20 @@ function sourcePayload() {
     mode: $("mode").value,
     provider: $("provider").value,
   };
+}
+
+function fillSample() {
+  $("question").value = t("sampleQuestion");
+  $("source-answer").value = t("sampleAnswer");
+  $("source-answer").dispatchEvent(new Event("input", { bubbles: true }));
+  setStatus(t("sampleHint"));
+  const actions = document.querySelector(".actions");
+  if (actions) actions.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function scrollToTimeline() {
+  const timeline = $("timeline");
+  if (timeline) timeline.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function classifyRisk() {
@@ -439,6 +463,7 @@ async function runRoundtable(event) {
     state.transcript = data.transcript;
     renderTimeline();
     setStatus("");
+    scrollToTimeline();
   } catch (error) {
     setStatus(`${error.message} ${t("noApi")}`, true);
   } finally {
@@ -512,6 +537,7 @@ function wireEvents() {
   $("auto-button").addEventListener("click", runAutoDebate);
   $("stop-button").addEventListener("click", stopAutoDebate);
   $("paste-button").addEventListener("click", pasteClipboard);
+  $("sample-button").addEventListener("click", fillSample);
   $("copy-master").addEventListener("click", async () => {
     if (!(await ensureSafeToProceed())) return;
     copyText(buildMasterPrompt());

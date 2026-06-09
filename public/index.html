@@ -44,7 +44,10 @@
         <form class="panel input-panel" id="roundtable-form">
           <div class="panel-title">
             <h2 data-i18n="sourceTitle">元のAI回答</h2>
-            <button type="button" class="icon-button" id="paste-button" title="Paste from clipboard" aria-label="Paste from clipboard">⌘V</button>
+            <div class="panel-title__actions">
+              <button type="button" class="ghost-button" id="sample-button" data-i18n="trySample">サンプルで試す</button>
+              <button type="button" class="icon-button" id="paste-button" title="Paste from clipboard" aria-label="Paste from clipboard">⌘V</button>
+            </div>
           </div>
           <label for="question" data-i18n="questionLabel">元の質問・相談</label>
           <textarea id="question" rows="4" data-i18n-placeholder="questionPlaceholder" placeholder="例: この契約書のリスクを教えて"></textarea>
