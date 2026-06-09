@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- UX: ワンクリック「サンプルで試す」ボタン（質問＋回答を即充填し、実行/共有コピーでそのまま試せる）。空フォームの初見ハードルを解消
+- UX: 検討会の実行完了時に結果へ自動スクロール、主要アクション（実行）の視認性向上、サンプル投入時の操作ヒント表示
+
 ## [0.3.0] - 2026-06-04
 
 ### Added
