@@ -405,7 +405,16 @@ function renderTimeline() {
   if (!state.transcript.length) {
     const empty = document.createElement("div");
     empty.className = "empty";
-    empty.textContent = t("empty");
+    const text = document.createElement("p");
+    text.textContent = t("empty");
+    empty.appendChild(text);
+    // 初見でもすぐ試せるよう、空状態にサンプル投入ボタンを置く
+    const tryBtn = document.createElement("button");
+    tryBtn.type = "button";
+    tryBtn.className = "ghost-button";
+    tryBtn.textContent = t("trySample");
+    tryBtn.addEventListener("click", fillSample);
+    empty.appendChild(tryBtn);
     timeline.appendChild(empty);
     return;
   }
